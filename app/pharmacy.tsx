@@ -34,7 +34,7 @@ const submitOrder = async () => {
     customer_name: customerName,
   });
   if (error) { Alert.alert('Ýalňyşlyk', error.message); }
-  else { Alert.alert('✅', 'Bron edildi! Dermanhana sizi jaň eder!'); setShowOrderModal(false); setCustomerPhone(''); setCustomerName(''); }
+  else { Alert.alert('✅', 'Bron edildi! Dermanhana size jaň eder!'); setShowOrderModal(false); setCustomerPhone(''); setCustomerName(''); }
   setIsOrdering(false);
 };
   const [cartOpen, setCartOpen] = useState(false);
