@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../supabaseClient';
 import { useCart } from './_cartContext';
+import { registerForPushNotifications } from './notifications';
 
 export default function Home() {
   const router = useRouter();
@@ -26,6 +27,10 @@ export default function Home() {
     }
     fetchData();
   }, [city]);
+
+  useEffect(() => {
+    registerForPushNotifications();
+  }, []);
 
 
 const handleSearch = () => {
