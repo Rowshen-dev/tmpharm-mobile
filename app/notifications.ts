@@ -36,7 +36,9 @@ export async function registerForPushNotifications() {
   }
 
   // Получаем токен
-  const token = (await Notifications.getExpoPushTokenAsync()).data;
+  const token = (await Notifications.getExpoPushTokenAsync({
+    projectId: '4c8cd2ce-c960-46da-916a-69f63f7259fc'
+  })).data;
   console.log('Push token:', token);
 
   // Сохраняем в Supabase
