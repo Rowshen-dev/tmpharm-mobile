@@ -19,7 +19,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.rovshen_5027.tmpharm"
+      "package": "com.rovshen_5027.tmpharm",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",

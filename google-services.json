@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "710003655403",
+    "project_id": "tmpharm",
+    "storage_bucket": "tmpharm.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:710003655403:android:27835a633d65d6346af4ae",
+        "android_client_info": {
+          "package_name": "com.rovshen_5027.tmpharm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnRKN6VddmqPhM1rqzMO3GYaq0PundAW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
