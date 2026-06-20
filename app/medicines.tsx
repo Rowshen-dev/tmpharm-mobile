@@ -208,11 +208,29 @@ export default function Medicines() {
                   <Text style={styles.cartItemEmoji}>{item.emoji || '💊'}</Text>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.cartItemName}>{item.name}</Text>
-                    <Text style={styles.cartItemPrice}>{item.price} × {item.quantity}</Text>
+                    <Text style={styles.cartItemPrice}>{item.price} TMT × {item.quantity}</Text>
                   </View>
-                  <TouchableOpacity onPress={() => setCart((prev: any) => prev.filter((i: any) => i.id !== item.id))}>
-                    <Text style={{ color: '#ef4444', fontSize: 20 }}>✕</Text>
-                  </TouchableOpacity>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <TouchableOpacity
+                      onPress={() => removeFromCart(item)}
+                      style={{ width: 28, height: 28, backgroundColor: '#e5e7eb', borderRadius: 14, justifyContent: 'center', alignItems: 'center' }}
+                    >
+                      <Text style={{ fontSize: 16, fontWeight: 'bold', color: '#374151' }}>−</Text>
+                    </TouchableOpacity>
+                    <Text style={{ fontSize: 16, fontWeight: '600', minWidth: 20, textAlign: 'center' }}>{item.quantity}</Text>
+                    <TouchableOpacity
+                      onPress={() => addToCart(item)}
+                      style={{ width: 28, height: 28, backgroundColor: '#0d9488', borderRadius: 14, justifyContent: 'center', alignItems: 'center' }}
+                    >
+                      <Text style={{ fontSize: 16, fontWeight: 'bold', color: 'white' }}>+</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => setCart((prev: any) => prev.filter((i: any) => i.id !== item.id))}
+                      style={{ marginLeft: 4 }}
+                    >
+                      <Text style={{ color: '#ef4444', fontSize: 18 }}>✕</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               ))
             )}
