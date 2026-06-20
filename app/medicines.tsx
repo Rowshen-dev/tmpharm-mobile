@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../supabaseClient';
 import { useCart } from './_cartContext';
 
@@ -8,8 +8,9 @@ export default function Medicines() {
   const router = useRouter();
   const [medicines, setMedicines] = useState<any[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
-    const { cart, setCart, addToCart, removeFromCart, getQty, totalItems, totalPrice, tr } = useCart();
-    const [cartOpen, setCartOpen] = useState(false);
+  const [selectedMed, setSelectedMed] = useState<any | null>(null);
+  const { cart, setCart, addToCart, removeFromCart, getQty, totalItems, totalPrice, tr } = useCart();
+  const [cartOpen, setCartOpen] = useState(false);
 
   const categories = [
     { name: tr.headache, emoji: '🧠', keyword: 'headache' },
@@ -29,112 +30,201 @@ export default function Medicines() {
 
   const filtered = selected ? medicines.filter(m => m.category === selected) : medicines;
 
-
-
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
-    <ScrollView style={styles.container}>
-      <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-        <Text style={styles.backText}>{tr.back}</Text>
-      </TouchableOpacity>
-
-      <Text style={styles.title}>💊 {tr.medicines}</Text>
-
-      {/* Categories */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catRow}>
-        <TouchableOpacity
-          style={[styles.catBtn, !selected && styles.catBtnActive]}
-          onPress={() => setSelected(null)}
-        >
-          <Text style={[styles.catText, !selected && styles.catTextActive]}>{tr.all}</Text>
+      <ScrollView style={styles.container}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+          <Text style={styles.backText}>{tr.back}</Text>
         </TouchableOpacity>
-        {categories.map((cat) => (
+
+        <Text style={styles.title}>💊 {tr.medicines}</Text>
+
+        {/* Categories */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catRow}>
           <TouchableOpacity
-            key={cat.keyword}
-            style={[styles.catBtn, selected === cat.keyword && styles.catBtnActive]}
-            onPress={() => setSelected(cat.keyword)}
+            style={[styles.catBtn, !selected && styles.catBtnActive]}
+            onPress={() => setSelected(null)}
           >
-            <Text style={[styles.catText, selected === cat.keyword && styles.catTextActive]}>
-              {cat.emoji} {cat.name}
-            </Text>
+            <Text style={[styles.catText, !selected && styles.catTextActive]}>{tr.all}</Text>
           </TouchableOpacity>
-        ))}
+          {categories.map((cat) => (
+            <TouchableOpacity
+              key={cat.keyword}
+              style={[styles.catBtn, selected === cat.keyword && styles.catBtnActive]}
+              onPress={() => setSelected(cat.keyword)}
+            >
+              <Text style={[styles.catText, selected === cat.keyword && styles.catTextActive]}>
+                {cat.emoji} {cat.name}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Medicines grid */}
+        <View style={styles.grid}>
+          {filtered.map((med) => {
+            const qty = getQty(med.id);
+            return (
+              <TouchableOpacity key={med.id} style={styles.medCard} onPress={() => setSelectedMed(med)} activeOpacity={0.85}>
+                {med.image_url ? (
+                  <Image source={{ uri: med.image_url }} style={styles.medImage} resizeMode="contain" />
+                ) : (
+                  <Text style={styles.medEmoji}>{med.emoji || '💊'}</Text>
+                )}
+                <Text style={styles.medName} numberOfLines={2}>{med.name}</Text>
+                <Text style={styles.medPrice}>{med.price ? `${med.price} TMT` : 'Nyrhy soraň'}</Text>
+                <Text style={styles.medPharm}>{med.pharmacy}</Text>
+                <View style={styles.qtyRow}>
+                  <TouchableOpacity style={styles.qtyBtn} onPress={(e) => { e.stopPropagation?.(); removeFromCart(med); }}>
+                    <Text style={styles.qtyBtnText}>−</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.qtyNum}>{qty}</Text>
+                  <TouchableOpacity style={[styles.qtyBtn, styles.qtyBtnGreen]} onPress={(e) => { e.stopPropagation?.(); addToCart(med); }}>
+                    <Text style={[styles.qtyBtnText, { color: 'white' }]}>+</Text>
+                  </TouchableOpacity>
+                </View>
+                <TouchableOpacity style={styles.addBtn} onPress={(e) => { e.stopPropagation?.(); addToCart(med); }}>
+                  <Text style={styles.addBtnText}>{tr.addToCart}</Text>
+                </TouchableOpacity>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
       </ScrollView>
 
-      {/* Medicines grid */}
-      <View style={styles.grid}>
-        {filtered.map((med) => {
-          const qty = getQty(med.id);
-          return (
-            <View key={med.id} style={styles.medCard}>
-              <Text style={styles.medEmoji}>{med.emoji || '💊'}</Text>
-              <Text style={styles.medName}>{med.name}</Text>
-              <Text style={styles.medPrice}>{med.price}</Text>
-              <Text style={styles.medPharm}>{med.pharmacy}</Text>
-              <View style={styles.qtyRow}>
-                <TouchableOpacity style={styles.qtyBtn} onPress={() => {
-                  
-                }}>
-                  <Text style={styles.qtyBtnText}>−</Text>
-                </TouchableOpacity>
-                <Text style={styles.qtyNum}>{qty}</Text>
-                <TouchableOpacity style={[styles.qtyBtn, styles.qtyBtnGreen]} onPress={() => addToCart(med)}>
-                  <Text style={[styles.qtyBtnText, { color: 'white' }]}>+</Text>
-                </TouchableOpacity>
+      {/* Cart button */}
+      <TouchableOpacity style={styles.cartBtn} onPress={() => setCartOpen(true)}>
+        <Text style={styles.cartIcon}>🛒</Text>
+        {totalItems > 0 && (
+          <View style={styles.cartBadge}>
+            <Text style={styles.cartBadgeText}>{totalItems}</Text>
+          </View>
+        )}
+      </TouchableOpacity>
+
+      {/* Medicine detail modal */}
+      <Modal visible={!!selectedMed} animationType="slide" transparent onRequestClose={() => setSelectedMed(null)}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <TouchableOpacity style={styles.modalClose} onPress={() => setSelectedMed(null)}>
+              <Text style={styles.modalCloseText}>✕</Text>
+            </TouchableOpacity>
+
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {/* Image or emoji */}
+              <View style={styles.modalImageContainer}>
+                {selectedMed?.image_url ? (
+                  <Image source={{ uri: selectedMed.image_url }} style={styles.modalImage} resizeMode="contain" />
+                ) : (
+                  <Text style={styles.modalEmoji}>{selectedMed?.emoji || '💊'}</Text>
+                )}
               </View>
-              <TouchableOpacity style={styles.addBtn} onPress={() => addToCart(med)}>
-                <Text style={styles.addBtnText}>{tr.addToCart}</Text>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
-      </View>
-    </ScrollView>
-           {/* Cart button */}
-            <TouchableOpacity style={styles.cartBtn} onPress={() => setCartOpen(true)}>
-              <Text style={styles.cartIcon}>🛒</Text>
-              {totalItems > 0 && (
-                <View style={styles.cartBadge}>
-                  <Text style={styles.cartBadgeText}>{totalItems}</Text>
+
+              {/* Name */}
+              <Text style={styles.modalName}>{selectedMed?.name}</Text>
+
+              {/* Pharmacy */}
+              {selectedMed?.pharmacy && (
+                <Text style={styles.modalPharm}>🏥 {selectedMed.pharmacy}</Text>
+              )}
+
+              {/* Price */}
+              <View style={styles.modalPriceRow}>
+                <Text style={styles.modalPrice}>
+                  {selectedMed?.price ? `${selectedMed.price} TMT` : 'Nyrhy soraň'}
+                </Text>
+                {selectedMed?.prescription_only && (
+                  <View style={styles.rxBadge}>
+                    <Text style={styles.rxText}>Rx</Text>
+                  </View>
+                )}
+              </View>
+
+              {/* Info rows */}
+              {selectedMed?.manufacturer && (
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabel}>🏭 Öndüriji</Text>
+                  <Text style={styles.infoValue}>{selectedMed.manufacturer}</Text>
                 </View>
               )}
+
+              {selectedMed?.country && (
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabel}>🌍 Ýurt</Text>
+                  <Text style={styles.infoValue}>{selectedMed.country}</Text>
+                </View>
+              )}
+
+              {selectedMed?.active_ingredient && (
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabel}>🧬 Düzümi</Text>
+                  <Text style={styles.infoValue}>{selectedMed.active_ingredient}</Text>
+                </View>
+              )}
+
+              {selectedMed?.dosage_form && (
+                <View style={styles.infoRow}>
+                  <Text style={styles.infoLabel}>💉 Görnüşi</Text>
+                  <Text style={styles.infoValue}>{selectedMed.dosage_form}</Text>
+                </View>
+              )}
+
+              {selectedMed?.description && (
+                <View style={styles.descContainer}>
+                  <Text style={styles.infoLabel}>📋 Düşündiriş</Text>
+                  <Text style={styles.descText}>{selectedMed.description}</Text>
+                </View>
+              )}
+
+              {/* Add to cart */}
+              <TouchableOpacity
+                style={styles.modalAddBtn}
+                onPress={() => { addToCart(selectedMed); setSelectedMed(null); }}
+              >
+                <Text style={styles.modalAddBtnText}>{tr.addToCart}</Text>
+              </TouchableOpacity>
+
+              <View style={{ height: 30 }} />
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Cart modal */}
+      {cartOpen && (
+        <View style={styles.cartModal}>
+          <View style={styles.cartHeader}>
+            <Text style={styles.cartTitle}>🛒 {tr.cart}</Text>
+            <TouchableOpacity onPress={() => setCartOpen(false)}>
+              <Text style={styles.cartClose}>✕</Text>
             </TouchableOpacity>
-      
-            {/* Cart modal */}
-            {cartOpen && (
-              <View style={styles.cartModal}>
-                <View style={styles.cartHeader}>
-                  <Text style={styles.cartTitle}>🛒 {tr.cart}</Text>
-                  <TouchableOpacity onPress={() => setCartOpen(false)}>
-                    <Text style={styles.cartClose}>✕</Text>
+          </View>
+          <ScrollView style={styles.cartList}>
+            {cart.length === 0 ? (
+              <Text style={styles.cartEmpty}>{tr.cartEmpty}</Text>
+            ) : (
+              cart.map((item: any) => (
+                <View key={item.id} style={styles.cartItem}>
+                  <Text style={styles.cartItemEmoji}>{item.emoji || '💊'}</Text>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.cartItemName}>{item.name}</Text>
+                    <Text style={styles.cartItemPrice}>{item.price} × {item.quantity}</Text>
+                  </View>
+                  <TouchableOpacity onPress={() => setCart((prev: any) => prev.filter((i: any) => i.id !== item.id))}>
+                    <Text style={{ color: '#ef4444', fontSize: 20 }}>✕</Text>
                   </TouchableOpacity>
                 </View>
-                <ScrollView style={styles.cartList}>
-                  {cart.length === 0 ? (
-                    <Text style={styles.cartEmpty}>{tr.cartEmpty}</Text>
-                  ) : (
-                    cart.map((item: any) => (
-                      <View key={item.id} style={styles.cartItem}>
-                        <Text style={styles.cartItemEmoji}>{item.emoji || '💊'}</Text>
-                        <View style={{ flex: 1 }}>
-                          <Text style={styles.cartItemName}>{item.name}</Text>
-                          <Text style={styles.cartItemPrice}>{item.price} × {item.quantity}</Text>
-                        </View>
-                        <TouchableOpacity onPress={() => setCart((prev: any) => prev.filter((i: any) => i.id !== item.id))}>
-                          <Text style={{ color: '#ef4444', fontSize: 20 }}>✕</Text>
-                        </TouchableOpacity>
-                      </View>
-                    ))
-                  )}
-                </ScrollView>
-                <View style={styles.cartFooter}>
-                  <Text style={styles.cartTotal}>{tr.total}: {totalPrice.toFixed(2)} TMT</Text>
-                  <TouchableOpacity style={styles.orderBtn}>
-                    <Text style={styles.orderBtnText}>{tr.order}</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
+              ))
             )}
+          </ScrollView>
+          <View style={styles.cartFooter}>
+            <Text style={styles.cartTotal}>{tr.total}: {totalPrice.toFixed(2)} TMT</Text>
+            <TouchableOpacity style={styles.orderBtn}>
+              <Text style={styles.orderBtnText}>{tr.order}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -151,6 +241,7 @@ const styles = StyleSheet.create({
   catTextActive: { color: 'white' },
   grid: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 16, gap: 12, paddingBottom: 100 },
   medCard: { backgroundColor: 'white', borderRadius: 20, padding: 16, width: '47%', alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 },
+  medImage: { width: 80, height: 80, marginBottom: 8 },
   medEmoji: { fontSize: 40, marginBottom: 8 },
   medName: { fontWeight: 'bold', fontSize: 15, textAlign: 'center', marginBottom: 4 },
   medPrice: { color: '#0d9488', fontWeight: '700', fontSize: 16, marginBottom: 2 },
@@ -162,6 +253,28 @@ const styles = StyleSheet.create({
   qtyNum: { fontSize: 16, fontWeight: '600', width: 24, textAlign: 'center' },
   addBtn: { backgroundColor: '#0d9488', borderRadius: 12, paddingHorizontal: 16, paddingVertical: 8, width: '100%', alignItems: 'center' },
   addBtnText: { color: 'white', fontWeight: '600', fontSize: 13 },
+  // Modal styles
+  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' },
+  modalContainer: { backgroundColor: 'white', borderTopLeftRadius: 28, borderTopRightRadius: 28, maxHeight: '90%', padding: 24, paddingTop: 16 },
+  modalClose: { alignSelf: 'flex-end', padding: 8 },
+  modalCloseText: { fontSize: 22, color: '#6b7280' },
+  modalImageContainer: { alignItems: 'center', marginVertical: 16 },
+  modalImage: { width: 160, height: 160 },
+  modalEmoji: { fontSize: 80 },
+  modalName: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 8, color: '#111827' },
+  modalPharm: { textAlign: 'center', color: '#6b7280', fontSize: 14, marginBottom: 12 },
+  modalPriceRow: { flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 12, marginBottom: 20 },
+  modalPrice: { fontSize: 26, fontWeight: 'bold', color: '#0d9488' },
+  rxBadge: { backgroundColor: '#fef3c7', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4 },
+  rxText: { color: '#d97706', fontWeight: 'bold', fontSize: 14 },
+  infoRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' },
+  infoLabel: { fontSize: 15, color: '#6b7280', fontWeight: '500', flex: 1 },
+  infoValue: { fontSize: 15, color: '#111827', fontWeight: '600', flex: 1, textAlign: 'right' },
+  descContainer: { paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' },
+  descText: { fontSize: 15, color: '#374151', lineHeight: 22, marginTop: 8 },
+  modalAddBtn: { backgroundColor: '#0d9488', borderRadius: 16, padding: 18, alignItems: 'center', marginTop: 24 },
+  modalAddBtnText: { color: 'white', fontWeight: 'bold', fontSize: 18 },
+  // Cart styles
   cartBtn: { position: 'absolute', bottom: 30, right: 20, backgroundColor: '#0d9488', width: 60, height: 60, borderRadius: 30, justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 8, elevation: 5 },
   cartIcon: { fontSize: 28 },
   cartBadge: { position: 'absolute', top: 0, right: 0, backgroundColor: '#ef4444', borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' },
@@ -178,6 +291,6 @@ const styles = StyleSheet.create({
   cartItemPrice: { color: '#6b7280', fontSize: 13 },
   cartFooter: { padding: 20, borderTopWidth: 1, borderColor: '#e5e7eb' },
   cartTotal: { fontSize: 20, fontWeight: 'bold', marginBottom: 12 },
-   orderBtn: { backgroundColor: '#0d9488', borderRadius: 16, padding: 16, alignItems: 'center' },
+  orderBtn: { backgroundColor: '#0d9488', borderRadius: 16, padding: 16, alignItems: 'center' },
   orderBtnText: { color: 'white', fontWeight: 'bold', fontSize: 18 },
 });
