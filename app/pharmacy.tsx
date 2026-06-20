@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../supabaseClient';
 import { useCart } from './_cartContext';
 
@@ -16,6 +16,7 @@ const [selectedMed, setSelectedMed] = useState<any>(null);
 const [customerPhone, setCustomerPhone] = useState('');
 const [customerName, setCustomerName] = useState('');
 const [isOrdering, setIsOrdering] = useState(false);
+const [medInfoModal, setMedInfoModal] = useState<any | null>(null);
 
 const handleOrder = (med: any) => {
   setSelectedMed(med);
@@ -75,27 +76,31 @@ const submitOrder = async () => {
 
       {/* Medicines */}
       <Text style={styles.sectionTitle}>{tr.medicines}</Text>
-      <View style={styles.grid}>
+     <View style={styles.grid}>
         {medicines.map((med) => (
-         <View key={med.id} style={styles.medCard}>
-  <Text style={styles.medEmoji}>{med.emoji || '💊'}</Text>
-  <Text style={styles.medName}>{med.name}</Text>
-  <Text style={styles.medPrice}>{med.price}</Text>
-  <View style={styles.qtyRow}>
-                    <TouchableOpacity style={styles.qtyBtn} onPress={() => removeFromCart(med)}>
-                      <Text style={styles.qtyBtnText}>−</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.qtyBtn, styles.qtyBtnGreen]} onPress={() => addToCart(med)}>
-                      <Text style={[styles.qtyBtnText, { color: 'white' }]}>+</Text>
-                    </TouchableOpacity>
-                  </View>
-  <TouchableOpacity style={styles.addBtn} onPress={() => addToCart(med)}>
-  <Text style={styles.addBtnText}>{tr.addToCart}</Text>
-</TouchableOpacity>
-<TouchableOpacity style={styles.bronBtn} onPress={() => handleOrder(med)}>
-  <Text style={styles.bronBtnText}>Bron etmek</Text>
-</TouchableOpacity>
-</View>
+          <TouchableOpacity key={med.id} style={styles.medCard} onPress={() => setMedInfoModal(med)} activeOpacity={0.85}>
+            {med.image_url ? (
+              <Image source={{ uri: med.image_url }} style={{ width: 60, height: 60, marginBottom: 8 }} resizeMode="contain" />
+            ) : (
+              <Text style={styles.medEmoji}>{med.emoji || '💊'}</Text>
+            )}
+            <Text style={styles.medName}>{med.name}</Text>
+            <Text style={styles.medPrice}>{med.price ? `${med.price} TMT` : 'Nyrhy soraň'}</Text>
+            <View style={styles.qtyRow}>
+              <TouchableOpacity style={styles.qtyBtn} onPress={(e) => { e.stopPropagation?.(); removeFromCart(med); }}>
+                <Text style={styles.qtyBtnText}>−</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.qtyBtn, styles.qtyBtnGreen]} onPress={(e) => { e.stopPropagation?.(); addToCart(med); }}>
+                <Text style={[styles.qtyBtnText, { color: 'white' }]}>+</Text>
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity style={styles.addBtn} onPress={(e) => { e.stopPropagation?.(); addToCart(med); }}>
+              <Text style={styles.addBtnText}>{tr.addToCart}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.bronBtn} onPress={(e) => { e.stopPropagation?.(); handleOrder(med); }}>
+              <Text style={styles.bronBtnText}>Bron etmek</Text>
+            </TouchableOpacity>
+          </TouchableOpacity>
         ))}
       </View>
     </ScrollView>
@@ -144,6 +149,74 @@ const submitOrder = async () => {
                     </View>
                   </View>
                 )}
+                {/* Medicine info modal */}
+      <Modal visible={!!medInfoModal} animationType="slide" transparent onRequestClose={() => setMedInfoModal(null)}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
+          <View style={{ backgroundColor: 'white', borderTopLeftRadius: 28, borderTopRightRadius: 28, maxHeight: '90%', padding: 24, paddingTop: 16 }}>
+            <TouchableOpacity style={{ alignSelf: 'flex-end', padding: 8 }} onPress={() => setMedInfoModal(null)}>
+              <Text style={{ fontSize: 22, color: '#6b7280' }}>✕</Text>
+            </TouchableOpacity>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={{ alignItems: 'center', marginVertical: 16 }}>
+                {medInfoModal?.image_url ? (
+                  <Image source={{ uri: medInfoModal.image_url }} style={{ width: 160, height: 160 }} resizeMode="contain" />
+                ) : (
+                  <Text style={{ fontSize: 80 }}>{medInfoModal?.emoji || '💊'}</Text>
+                )}
+              </View>
+              <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 8, color: '#111827' }}>{medInfoModal?.name}</Text>
+              <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#0d9488', textAlign: 'center', marginBottom: 20 }}>
+                {medInfoModal?.price ? `${medInfoModal.price} TMT` : 'Nyrhy soraň'}
+              </Text>
+              {medInfoModal?.manufacturer && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🏭 Öndüriji</Text>
+                  <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{medInfoModal.manufacturer}</Text>
+                </View>
+              )}
+              {medInfoModal?.country && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🌍 Ýurt</Text>
+                  <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{medInfoModal.country}</Text>
+                </View>
+              )}
+              {medInfoModal?.active_ingredient && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🧬 Düzümi</Text>
+                  <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{medInfoModal.active_ingredient}</Text>
+                </View>
+              )}
+              {medInfoModal?.dosage_form && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>💉 Görnüşi</Text>
+                  <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{medInfoModal.dosage_form}</Text>
+                </View>
+              )}
+              {medInfoModal?.description && (
+                <View style={{ paddingVertical: 12 }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15, marginBottom: 8 }}>📋 Düşündiriş</Text>
+                  <Text style={{ color: '#374151', fontSize: 15, lineHeight: 22 }}>{medInfoModal.description}</Text>
+                </View>
+              )}
+              <View style={{ flexDirection: 'row', gap: 12, marginTop: 24 }}>
+                <TouchableOpacity
+                  style={{ flex: 1, backgroundColor: '#0d9488', borderRadius: 16, padding: 16, alignItems: 'center' }}
+                  onPress={() => { addToCart(medInfoModal); setMedInfoModal(null); }}
+                >
+                  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>{tr.addToCart}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ flex: 1, backgroundColor: 'white', borderWidth: 2, borderColor: '#0d9488', borderRadius: 16, padding: 16, alignItems: 'center' }}
+                  onPress={() => { handleOrder(medInfoModal); setMedInfoModal(null); }}
+                >
+                  <Text style={{ color: '#0d9488', fontWeight: 'bold', fontSize: 16 }}>Bron etmek</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ height: 30 }} />
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
               {showOrderModal && (
   <Modal transparent animationType="slide">
     <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 }}>

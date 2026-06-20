@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../supabaseClient';
 import { useCart } from './_cartContext';
 import { registerForPushNotifications } from './notifications';
@@ -14,6 +14,7 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const { cart, setCart, addToCart, removeFromCart, getQty, totalItems, totalPrice, lang, setLang, tr, city, setCity } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
+  const [selectedMed, setSelectedMed] = useState<any | null>(null);
 
 
 
@@ -99,30 +100,34 @@ const handleSearch = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Medicines scrolling */}
+            {/* Medicines scrolling */}
         <Text style={styles.sectionTitle}>{tr.medicines}</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.medScroll}>
           {medicines.map((med) => {
             const qty = getQty(med.id);
             return (
-              <View key={med.id} style={styles.medCard}>
-                <Text style={styles.medEmoji}>{med.emoji || '💊'}</Text>
+              <TouchableOpacity key={med.id} style={styles.medCard} onPress={() => setSelectedMed(med)} activeOpacity={0.85}>
+                {med.image_url ? (
+                  <Image source={{ uri: med.image_url }} style={{ width: 60, height: 60, marginBottom: 8 }} resizeMode="contain" />
+                ) : (
+                  <Text style={styles.medEmoji}>{med.emoji || '💊'}</Text>
+                )}
                 <Text style={styles.medName}>{med.name}</Text>
-                <Text style={styles.medPrice}>{med.price}</Text>
+                <Text style={styles.medPrice}>{med.price ? `${med.price} TMT` : 'Nyrhy soraň'}</Text>
                 <Text style={styles.medPharm}>{med.pharmacy}</Text>
                 <View style={styles.qtyRow}>
-                  <TouchableOpacity style={styles.qtyBtn} onPress={() => removeFromCart(med)}>
+                  <TouchableOpacity style={styles.qtyBtn} onPress={(e) => { e.stopPropagation?.(); removeFromCart(med); }}>
                     <Text style={styles.qtyBtnText}>−</Text>
                   </TouchableOpacity>
                   <Text style={styles.qtyNum}>{qty}</Text>
-                  <TouchableOpacity style={[styles.qtyBtn, styles.qtyBtnGreen]} onPress={() => addToCart(med)}>
+                  <TouchableOpacity style={[styles.qtyBtn, styles.qtyBtnGreen]} onPress={(e) => { e.stopPropagation?.(); addToCart(med); }}>
                     <Text style={[styles.qtyBtnText, { color: 'white' }]}>+</Text>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={styles.addBtn} onPress={() => addToCart(med)}>
+                <TouchableOpacity style={styles.addBtn} onPress={(e) => { e.stopPropagation?.(); addToCart(med); }}>
                   <Text style={styles.addBtnText}>{tr.addToCart}</Text>
                 </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             );
           })}
         </ScrollView>
@@ -192,6 +197,71 @@ const handleSearch = () => {
           </View>
         </View>
       )}
+
+
+      {/* Medicine detail modal */}
+      <Modal visible={!!selectedMed} animationType="slide" transparent onRequestClose={() => setSelectedMed(null)}>
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'flex-end' }}>
+          <View style={{ backgroundColor: 'white', borderTopLeftRadius: 28, borderTopRightRadius: 28, maxHeight: '90%', padding: 24, paddingTop: 16 }}>
+            <TouchableOpacity style={{ alignSelf: 'flex-end', padding: 8 }} onPress={() => setSelectedMed(null)}>
+              <Text style={{ fontSize: 22, color: '#6b7280' }}>✕</Text>
+            </TouchableOpacity>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={{ alignItems: 'center', marginVertical: 16 }}>
+                {selectedMed?.image_url ? (
+                  <Image source={{ uri: selectedMed.image_url }} style={{ width: 160, height: 160 }} resizeMode="contain" />
+                ) : (
+                  <Text style={{ fontSize: 80 }}>{selectedMed?.emoji || '💊'}</Text>
+                )}
+              </View>
+              <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 8, color: '#111827' }}>{selectedMed?.name}</Text>
+              {selectedMed?.pharmacy && <Text style={{ textAlign: 'center', color: '#6b7280', fontSize: 14, marginBottom: 12 }}>🏥 {selectedMed.pharmacy}</Text>}
+              <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#0d9488', textAlign: 'center', marginBottom: 20 }}>
+                {selectedMed?.price ? `${selectedMed.price} TMT` : 'Nyrhy soraň'}
+              </Text>
+              {selectedMed?.manufacturer && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🏭 Öndüriji</Text>
+                  <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{selectedMed.manufacturer}</Text>
+                </View>
+              )}
+              {selectedMed?.country && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🌍 Ýurt</Text>
+                  <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{selectedMed.country}</Text>
+                </View>
+              )}
+              {selectedMed?.active_ingredient && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🧬 Düzümi</Text>
+                  <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{selectedMed.active_ingredient}</Text>
+                </View>
+              )}
+              {selectedMed?.dosage_form && (
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>💉 Görnüşi</Text>
+                  <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{selectedMed.dosage_form}</Text>
+                </View>
+              )}
+              {selectedMed?.description && (
+                <View style={{ paddingVertical: 12 }}>
+                  <Text style={{ color: '#6b7280', fontSize: 15, marginBottom: 8 }}>📋 Düşündiriş</Text>
+                  <Text style={{ color: '#374151', fontSize: 15, lineHeight: 22 }}>{selectedMed.description}</Text>
+                </View>
+              )}
+              <TouchableOpacity
+                style={{ backgroundColor: '#0d9488', borderRadius: 16, padding: 18, alignItems: 'center', marginTop: 24 }}
+                onPress={() => { addToCart(selectedMed); setSelectedMed(null); }}
+              >
+                <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 18 }}>{tr.addToCart}</Text>
+              </TouchableOpacity>
+              <View style={{ height: 30 }} />
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+
+
     </View>
   );
 }
