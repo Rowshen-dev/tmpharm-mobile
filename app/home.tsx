@@ -52,9 +52,6 @@ const handleSearch = () => {
     <TouchableOpacity onPress={() => setCityOpen(!cityOpen)} style={{ backgroundColor: '#f3f4f6', borderRadius: 20, paddingHorizontal: 10, paddingVertical: 6 }}>
       <Text style={{ color: '#374151', fontSize: 13, fontWeight: '500' }}>{city} ▼</Text>
     </TouchableOpacity>
-    <TouchableOpacity onPress={() => router.replace('/')}>
-      <Text style={styles.logout}>{tr.logout}</Text>
-    </TouchableOpacity>
   </View>
 </View>
 {cityOpen && (
@@ -288,7 +285,6 @@ const styles = StyleSheet.create({
   container: { flex: 1 },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 16, paddingTop: 60, backgroundColor: 'white', shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 },
   logo: { fontSize: 24, fontWeight: 'bold', color: '#0d9488' },
-  logout: { color: '#ef4444', fontWeight: '600', backgroundColor: '#fee2e2', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
   searchRow: { padding: 16, backgroundColor: 'white' },
   search: { backgroundColor: '#f9fafb', borderRadius: 30, padding: 14, fontSize: 16, borderWidth: 1, borderColor: '#e5e7eb' },
   navGrid: { padding: 16, gap: 10 },
