@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../supabaseClient';
 import { useCart } from './_cartContext';
 
@@ -11,6 +11,32 @@ export default function Medicines() {
   const [selectedMed, setSelectedMed] = useState<any | null>(null);
   const { cart, setCart, addToCart, removeFromCart, getQty, totalItems, totalPrice, tr } = useCart();
   const [cartOpen, setCartOpen] = useState(false);
+  const [showOrderModal, setShowOrderModal] = useState(false);
+const [orderMed, setOrderMed] = useState<any>(null);
+const [customerPhone, setCustomerPhone] = useState('');
+const [customerName, setCustomerName] = useState('');
+const [isOrdering, setIsOrdering] = useState(false);
+
+const handleOrder = (med: any) => {
+  setOrderMed(med);
+  setShowOrderModal(true);
+};
+
+const submitOrder = async () => {
+  if (!customerPhone) { Alert.alert('Ýalňyşlyk', 'Telefon belgiňizi giriziň'); return; }
+  setIsOrdering(true);
+  const { error } = await supabase.from('orders').insert({
+    pharmacy_name: orderMed?.pharmacy,
+    medicine_name: orderMed?.name,
+    medicine_price: orderMed?.price,
+    quantity: 1,
+    customer_phone: customerPhone,
+    customer_name: customerName,
+  });
+  if (error) { Alert.alert('Ýalňyşlyk', error.message); }
+  else { Alert.alert('✅', 'Bron edildi! Dermanhana size jaň eder!'); setShowOrderModal(false); setCustomerPhone(''); setCustomerName(''); }
+  setIsOrdering(false);
+};
 
   const categories = [
     { name: tr.headache, emoji: '🧠', keyword: 'headache' },
@@ -85,6 +111,9 @@ export default function Medicines() {
                 </View>
                 <TouchableOpacity style={styles.addBtn} onPress={(e) => { e.stopPropagation?.(); addToCart(med); }}>
                   <Text style={styles.addBtnText}>{tr.addToCart}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.bronBtn} onPress={(e) => { e.stopPropagation?.(); handleOrder(med); }}>
+                  <Text style={styles.bronBtnText}>Bron etmek</Text>
                 </TouchableOpacity>
               </TouchableOpacity>
             );
@@ -243,6 +272,47 @@ export default function Medicines() {
           </View>
         </View>
       )}
+      {/* Order modal */}
+      {showOrderModal && (
+        <Modal transparent animationType="slide">
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 }}>
+            <View style={{ backgroundColor: 'white', borderRadius: 24, padding: 24 }}>
+              <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 16 }}>📋 Bron etmek</Text>
+              <Text style={{ color: '#6b7280', marginBottom: 16 }}>💊 {orderMed?.name} — {orderMed?.price} TMT</Text>
+              <TextInput
+                placeholder="Adyňyz"
+                value={customerName}
+                onChangeText={setCustomerName}
+                style={{ borderWidth: 1, borderColor: '#e5e7eb', borderRadius: 16, padding: 14, fontSize: 16, marginBottom: 12 }}
+              />
+              <TextInput
+                placeholder="Telefon belgiňiz (+993...)"
+                value={customerPhone}
+                onChangeText={setCustomerPhone}
+                keyboardType="phone-pad"
+                style={{ borderWidth: 1, borderColor: '#e5e7eb', borderRadius: 16, padding: 14, fontSize: 16, marginBottom: 20 }}
+              />
+              <View style={{ flexDirection: 'row', gap: 12 }}>
+                <TouchableOpacity
+                  onPress={submitOrder}
+                  disabled={isOrdering}
+                  style={{ flex: 1, backgroundColor: '#0d9488', borderRadius: 16, padding: 16, alignItems: 'center' }}
+                >
+                  <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>
+                    {isOrdering ? 'Bronlanýar...' : 'Bron et'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setShowOrderModal(false)}
+                  style={{ flex: 1, backgroundColor: '#e5e7eb', borderRadius: 16, padding: 16, alignItems: 'center' }}
+                >
+                  <Text style={{ color: '#374151', fontWeight: 'bold', fontSize: 16 }}>Ýatyr</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      )}
     </View>
   );
 }
@@ -311,4 +381,6 @@ const styles = StyleSheet.create({
   cartTotal: { fontSize: 20, fontWeight: 'bold', marginBottom: 12 },
   orderBtn: { backgroundColor: '#0d9488', borderRadius: 16, padding: 16, alignItems: 'center' },
   orderBtnText: { color: 'white', fontWeight: 'bold', fontSize: 18 },
+  bronBtn: { backgroundColor: 'white', borderWidth: 2, borderColor: '#0d9488', borderRadius: 12, paddingVertical: 8, width: '100%', alignItems: 'center', marginTop: 8 },
+bronBtnText: { color: '#0d9488', fontWeight: '600', fontSize: 13 },
 });
