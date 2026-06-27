@@ -106,19 +106,19 @@ const handleSearch = () => {
         {/* Nav buttons */}
         <View style={styles.navGrid}>
           <TouchableOpacity style={styles.navBtn} onPress={() => router.push('/medicines' as any)}>
-            <Text style={styles.navText}>💊 {tr.medicines}</Text>
+            <Text style={styles.navText}>{tr.medicines}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.navBtn} onPress={() => router.push('/pharmacies' as any)}>
-            <Text style={styles.navText}>🏥 {tr.pharmacies}</Text>
+            <Text style={styles.navText}>{tr.pharmacies}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.navBtn} onPress={() => router.push('/compare')}>
-            <Text style={styles.navText}>⚖️ {tr.compare}</Text>
+            <Text style={styles.navText}>{tr.compare}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.navBtn} onPress={() => router.push('/news')}>
-            <Text style={styles.navText}>📰 {tr.news}</Text>
+            <Text style={styles.navText}>{tr.news}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.navBtn} onPress={() => router.push('/firstaid')}>
-            <Text style={styles.navText}>🚨 {tr.firstaid}</Text>
+            <Text style={styles.navText}>{tr.firstaid}</Text>
           </TouchableOpacity>
         </View>
 
@@ -191,7 +191,7 @@ const handleSearch = () => {
       {cartOpen && (
         <View style={styles.cartModal}>
           <View style={styles.cartHeader}>
-            <Text style={styles.cartTitle}>🛒 {tr.cart}</Text>
+            <Text style={styles.cartTitle}>{tr.cart}</Text>
             <TouchableOpacity onPress={() => setCartOpen(false)}>
               <Text style={styles.cartClose}>✕</Text>
             </TouchableOpacity>
@@ -258,37 +258,37 @@ const handleSearch = () => {
                 )}
               </View>
               <Text style={{ fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 8, color: '#111827' }}>{selectedMed?.name}</Text>
-              {selectedMed?.pharmacy && <Text style={{ textAlign: 'center', color: '#6b7280', fontSize: 14, marginBottom: 12 }}>🏥 {selectedMed.pharmacy}</Text>}
+              {selectedMed?.pharmacy && <Text style={{ textAlign: 'center', color: '#6b7280', fontSize: 14, marginBottom: 12 }}>{selectedMed.pharmacy}</Text>}
               <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#0d9488', textAlign: 'center', marginBottom: 20 }}>
                 {selectedMed?.price ? `${selectedMed.price} TMT` : 'Nyrhy soraň'}
               </Text>
               {selectedMed?.manufacturer && (
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🏭 Öndüriji</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>Öndüriji</Text>
                   <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{selectedMed.manufacturer}</Text>
                 </View>
               )}
               {selectedMed?.country && (
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🌍 Ýurt</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>Ýurt</Text>
                   <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{selectedMed.country}</Text>
                 </View>
               )}
               {selectedMed?.active_ingredient && (
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🧬 Düzümi</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>Düzümi</Text>
                   <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{selectedMed.active_ingredient}</Text>
                 </View>
               )}
               {selectedMed?.dosage_form && (
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15 }}>💉 Görnüşi</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>Görnüşi</Text>
                   <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{selectedMed.dosage_form}</Text>
                 </View>
               )}
               {selectedMed?.description && (
                 <View style={{ paddingVertical: 12 }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15, marginBottom: 8 }}>📋 Düşündiriş</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15, marginBottom: 8 }}>Düşündiriş</Text>
                   <Text style={{ color: '#374151', fontSize: 15, lineHeight: 22 }}>{selectedMed.description}</Text>
                 </View>
               )}
@@ -309,8 +309,8 @@ const handleSearch = () => {
         <Modal transparent animationType="slide">
           <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 }}>
             <View style={{ backgroundColor: 'white', borderRadius: 24, padding: 24 }}>
-              <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 16 }}>📋 Bron etmek</Text>
-              <Text style={{ color: '#6b7280', marginBottom: 16 }}>💊 {orderMed?.name} — {orderMed?.price} TMT</Text>
+              <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 16 }}>Bron etmek</Text>
+              <Text style={{ color: '#6b7280', marginBottom: 16 }}> {orderMed?.name} — {orderMed?.price} TMT</Text>
               <TextInput
                 placeholder="Adyňyz"
                 value={customerName}

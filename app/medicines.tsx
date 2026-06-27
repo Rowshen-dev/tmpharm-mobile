@@ -63,7 +63,7 @@ const submitOrder = async () => {
           <Text style={styles.backText}>{tr.back}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.title}>💊 {tr.medicines}</Text>
+        <Text style={styles.title}>{tr.medicines}</Text>
 
         {/* Categories */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catRow}>
@@ -80,7 +80,7 @@ const submitOrder = async () => {
               onPress={() => setSelected(cat.keyword)}
             >
               <Text style={[styles.catText, selected === cat.keyword && styles.catTextActive]}>
-                {cat.emoji} {cat.name}
+                {cat.name}
               </Text>
             </TouchableOpacity>
           ))}
@@ -154,7 +154,7 @@ const submitOrder = async () => {
 
               {/* Pharmacy */}
               {selectedMed?.pharmacy && (
-                <Text style={styles.modalPharm}>🏥 {selectedMed.pharmacy}</Text>
+                <Text style={styles.modalPharm}>{selectedMed.pharmacy}</Text>
               )}
 
               {/* Price */}
@@ -172,35 +172,35 @@ const submitOrder = async () => {
               {/* Info rows */}
               {selectedMed?.manufacturer && (
                 <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>🏭 Öndüriji</Text>
+                  <Text style={styles.infoLabel}>Öndüriji</Text>
                   <Text style={styles.infoValue}>{selectedMed.manufacturer}</Text>
                 </View>
               )}
 
               {selectedMed?.country && (
                 <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>🌍 Ýurt</Text>
+                  <Text style={styles.infoLabel}>Ýurt</Text>
                   <Text style={styles.infoValue}>{selectedMed.country}</Text>
                 </View>
               )}
 
               {selectedMed?.active_ingredient && (
                 <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>🧬 Düzümi</Text>
+                  <Text style={styles.infoLabel}>Düzümi</Text>
                   <Text style={styles.infoValue}>{selectedMed.active_ingredient}</Text>
                 </View>
               )}
 
               {selectedMed?.dosage_form && (
                 <View style={styles.infoRow}>
-                  <Text style={styles.infoLabel}>💉 Görnüşi</Text>
+                  <Text style={styles.infoLabel}>Görnüşi</Text>
                   <Text style={styles.infoValue}>{selectedMed.dosage_form}</Text>
                 </View>
               )}
 
               {selectedMed?.description && (
                 <View style={styles.descContainer}>
-                  <Text style={styles.infoLabel}>📋 Düşündiriş</Text>
+                  <Text style={styles.infoLabel}>Düşündiriş</Text>
                   <Text style={styles.descText}>{selectedMed.description}</Text>
                 </View>
               )}
@@ -223,7 +223,7 @@ const submitOrder = async () => {
       {cartOpen && (
         <View style={styles.cartModal}>
           <View style={styles.cartHeader}>
-            <Text style={styles.cartTitle}>🛒 {tr.cart}</Text>
+            <Text style={styles.cartTitle}>{tr.cart}</Text>
             <TouchableOpacity onPress={() => setCartOpen(false)}>
               <Text style={styles.cartClose}>✕</Text>
             </TouchableOpacity>
@@ -277,8 +277,8 @@ const submitOrder = async () => {
         <Modal transparent animationType="slide">
           <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 }}>
             <View style={{ backgroundColor: 'white', borderRadius: 24, padding: 24 }}>
-              <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 16 }}>📋 Bron etmek</Text>
-              <Text style={{ color: '#6b7280', marginBottom: 16 }}>💊 {orderMed?.name} — {orderMed?.price} TMT</Text>
+              <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 16 }}>Bron etmek</Text>
+              <Text style={{ color: '#6b7280', marginBottom: 16 }}>{orderMed?.name} — {orderMed?.price} TMT</Text>
               <TextInput
                 placeholder="Adyňyz"
                 value={customerName}

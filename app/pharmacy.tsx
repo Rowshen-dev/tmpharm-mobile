@@ -70,8 +70,8 @@ const submitOrder = async () => {
         <Text style={styles.profileEmoji}>{pharmacy?.image || '🏥'}</Text>
         <Text style={styles.profileName}>{pharmacy?.name}</Text>
         <Text style={styles.profileBio}>{pharmacy?.bio}</Text>
-        <Text style={styles.profileAddress}>📍 {pharmacy?.address}</Text>
-        <Text style={styles.profilePhone}>📞 {pharmacy?.phone}</Text>
+        <Text style={styles.profileAddress}>{pharmacy?.address}</Text>
+        <Text style={styles.profilePhone}>{pharmacy?.phone}</Text>
       </View>
 
       {/* Medicines */}
@@ -188,31 +188,31 @@ const submitOrder = async () => {
               </Text>
               {medInfoModal?.manufacturer && (
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🏭 Öndüriji</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>Öndüriji</Text>
                   <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{medInfoModal.manufacturer}</Text>
                 </View>
               )}
               {medInfoModal?.country && (
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🌍 Ýurt</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>Ýurt</Text>
                   <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{medInfoModal.country}</Text>
                 </View>
               )}
               {medInfoModal?.active_ingredient && (
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15 }}>🧬 Düzümi</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>Düzümi</Text>
                   <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{medInfoModal.active_ingredient}</Text>
                 </View>
               )}
               {medInfoModal?.dosage_form && (
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderColor: '#f3f4f6' }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15 }}>💉 Görnüşi</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15 }}>Görnüşi</Text>
                   <Text style={{ color: '#111827', fontWeight: '600', fontSize: 15 }}>{medInfoModal.dosage_form}</Text>
                 </View>
               )}
               {medInfoModal?.description && (
                 <View style={{ paddingVertical: 12 }}>
-                  <Text style={{ color: '#6b7280', fontSize: 15, marginBottom: 8 }}>📋 Düşündiriş</Text>
+                  <Text style={{ color: '#6b7280', fontSize: 15, marginBottom: 8 }}>Düşündiriş</Text>
                   <Text style={{ color: '#374151', fontSize: 15, lineHeight: 22 }}>{medInfoModal.description}</Text>
                 </View>
               )}
@@ -239,8 +239,8 @@ const submitOrder = async () => {
   <Modal transparent animationType="slide">
     <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 }}>
       <View style={{ backgroundColor: 'white', borderRadius: 24, padding: 24 }}>
-        <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 16 }}>📋 Bron etmek</Text>
-        <Text style={{ color: '#6b7280', marginBottom: 16 }}>💊 {selectedMed?.name} — {selectedMed?.price}</Text>
+        <Text style={{ fontSize: 22, fontWeight: 'bold', marginBottom: 16 }}>Bron etmek</Text>
+        <Text style={{ color: '#6b7280', marginBottom: 16 }}>{selectedMed?.name} — {selectedMed?.price}</Text>
         <TextInput
           placeholder="Adyňyz"
           value={customerName}
