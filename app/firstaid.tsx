@@ -7,12 +7,12 @@ export default function FirstAid() {
   const router = useRouter();
 
   const tips = [
-    { emoji: '🫀', title: 'Ýürek duranда', steps: ['103 jaň ediň', 'Ýere ýatyr', 'Döşüne 100-120/min basyň', 'Dem almagyna kömek ediň'] },
-    { emoji: '🩸', title: 'Gan akanда', steps: ['Ýarany berk basyň', 'Ýokary galdyryň', 'Bandaj daňyň', '103 jaň ediň'] },
-    { emoji: '🔥', title: 'Ýanan mahaly', steps: ['Sowuk suw akytyň 10 min', 'Buz goýmaň', 'Arassa mata bilen örtüň', '103 jaň ediň'] },
-    { emoji: '😵', title: 'Huşuny ýitirenде', steps: ['Arkasyna ýatyr', 'Başyny yza egiň', 'Dem alýanmy barlаň', '103 jaň ediň'] },
-    { emoji: '🦴', title: 'Süňk döwülenде', steps: ['Gymyldatmaň', 'Şinany daňyň', 'Buz goýuň mata bilen', '103 jaň ediň'] },
-    { emoji: '⚡', title: 'Tok uranда', steps: ['Tok çeşmesini öçüriň', 'El degirmeň', '103 jaň ediň', 'CPR başlaň gerek bolsa'] },
+    { title: 'Ýürek durandа', steps: ['103 jaň ediň', 'Ýere ýatyr', 'Döşüne 100-120/min basyň', 'Dem almagyna kömek ediň'] },
+    { title: 'Gan akandа', steps: ['Ýarany berk basyň', 'Ýokary galdyryň', 'Bandaj daňyň', '103 jaň ediň'] },
+    { title: 'Ýanan mahaly', steps: ['Sowuk suw akytyň 10 min', 'Buz goýmaň', 'Arassa mata bilen örtüň', '103 jaň ediň'] },
+    { title: 'Huşuny ýitirendе', steps: ['Arkasyna ýatyr', 'Başyny yza egiň', 'Dem alýanmy barlаň', '103 jaň ediň'] },
+    { title: 'Süňk döwülendе', steps: ['Gymyldatmaň', 'Şinany daňyň', 'Buz goýuň mata bilen', '103 jaň ediň'] },
+    { title: 'Tok urandа', steps: ['Tok çeşmesini öçüriň', 'El degirmeň', '103 jaň ediň', 'CPR başlaň gerek bolsa'] },
   ];
 
   return (
@@ -21,17 +21,17 @@ export default function FirstAid() {
         <Text style={styles.backText}>{tr.back}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>🚨 {tr.firstaid}</Text>
+      <Text style={styles.title}>{tr.firstaid}</Text>
       <Text style={styles.subtitle}>{tr.firstaidSubtitle}</Text>
 
       <View style={styles.emergency}>
-        <Text style={styles.emergencyText}>🚨 {tr.emergency}</Text>
+        <Text style={styles.emergencyText}>{tr.emergency}</Text>
       </View>
 
       <View style={styles.list}>
         {tips.map((tip, i) => (
           <View key={i} style={styles.card}>
-            <Text style={styles.cardEmoji}>{tip.emoji}</Text>
+           
             <Text style={styles.cardTitle}>{tip.title}</Text>
             {tip.steps.map((step, j) => (
               <View key={j} style={styles.stepRow}>

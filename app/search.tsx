@@ -64,7 +64,7 @@ export default function Search() {
           <Text style={styles.backText}>← Yza gaytmak</Text>
         </TouchableOpacity>
 
-        <Text style={styles.title}>🔍 Gözleg</Text>
+        <Text style={styles.title}> Gözleg</Text>
 
         <View style={styles.searchRow}>
           <TextInput
@@ -84,12 +84,12 @@ export default function Search() {
         {loading && <Text style={styles.loadingText}>Gözlenýär...</Text>}
 
         {!loading && searched && medicines.length === 0 && pharmacies.length === 0 && (
-          <Text style={styles.notFound}>Hiç zat tapylmady 😔</Text>
+          <Text style={styles.notFound}>Hiç zat tapylmady</Text>
         )}
 
         {!loading && medicines.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>💊 Dermanlar</Text>
+            <Text style={styles.sectionTitle}> Dermanlar</Text>
             <View style={styles.grid}>
               {medicines.map((med) => {
                 const qty = getQty(med.id);
@@ -127,7 +127,7 @@ export default function Search() {
 
         {!loading && pharmacies.length > 0 && (
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>🏥 Dermanhanalar</Text>
+            <Text style={styles.sectionTitle}> Dermanhanalar</Text>
             <View style={styles.pharmGrid}>
               {pharmacies.map((ph) => (
                 <TouchableOpacity

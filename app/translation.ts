@@ -15,7 +15,7 @@ export const t = {
     logout: 'Çykmak',
     loading: 'Ýüklenýär...',
     cheapest: '✅ Iň arzan',
-    notFound: 'Tapylmady 😔',
+    notFound: 'Tapylmady',
     citySelect: 'Şäher saýlaň',
     searchPage: 'Gözleg',
   },
@@ -35,7 +35,7 @@ export const t = {
     logout: 'Выйти',
     loading: 'Загрузка...',
     cheapest: '✅ Дешевле всего',
-    notFound: 'Не найдено 😔',
+    notFound: 'Не найдено',
     citySelect: 'Выбрать город',
     searchPage: 'Поиск',
   }

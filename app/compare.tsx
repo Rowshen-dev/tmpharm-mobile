@@ -30,7 +30,7 @@ export default function Compare() {
         <Text style={styles.backText}>{tr.back}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>💊 {tr.compare}</Text>
+      <Text style={styles.title}> {tr.compare}</Text>
 
       <View style={styles.searchRow}>
         <TextInput

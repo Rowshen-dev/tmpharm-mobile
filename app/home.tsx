@@ -1,9 +1,11 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { supabase } from '../supabaseClient';
 import { useCart } from './_cartContext';
 import { registerForPushNotifications } from './notifications';
+
 
 export default function Home() {
   const router = useRouter();
@@ -169,7 +171,12 @@ const handleSearch = () => {
               <Text style={styles.pharmEmoji}>{ph.image || '🏥'}</Text>
               <Text style={styles.pharmName}>{ph.name}</Text>
               <Text style={styles.pharmBio} numberOfLines={2}>{ph.bio}</Text>
-              {ph.is_top && <Text style={styles.premium}>⭐ Premium</Text>}
+                          {ph.is_top && (
+              <View style={styles.premium}>
+                <Ionicons name="star" size={12} color="#f8a90d" />
+                <Text style={styles.premiumText}>Premium</Text>
+              </View>
+            )}
             </TouchableOpacity>
           ))}
         </View>
@@ -378,7 +385,8 @@ const styles = StyleSheet.create({
   pharmEmoji: { fontSize: 48, marginBottom: 8 },
   pharmName: { fontWeight: 'bold', fontSize: 16, marginBottom: 4 },
   pharmBio: { color: '#9ca3af', fontSize: 12, textAlign: 'center' },
-  premium: { backgroundColor: '#fbbf24', color: 'black', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, fontSize: 12, fontWeight: 'bold', marginTop: 8 },
+  premium: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#fef3c7', paddingHorizontal: 10, paddingVertical: 4, borderRadius: 20, marginTop: 8 },
+  premiumText: { color: '#92400e', fontSize: 12, fontWeight: 'bold' },
   cartBtn: { position: 'absolute', bottom: 30, right: 20, backgroundColor: '#0d9488', width: 60, height: 60, borderRadius: 30, justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.2, shadowRadius: 8, elevation: 5 },
   cartIcon: { fontSize: 28 },
   cartBadge: { position: 'absolute', top: 0, right: 0, backgroundColor: '#ef4444', borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' },

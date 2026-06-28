@@ -25,7 +25,7 @@ export default function News() {
         <Text style={styles.backText}>{tr.back}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.title}>📰 {tr.news}</Text>
+      <Text style={styles.title}>{tr.news}</Text>
       <Text style={styles.subtitle}>{tr.newsSubtitle}</Text>
 
       {loading ? (
