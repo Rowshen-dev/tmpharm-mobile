@@ -6,7 +6,7 @@ export const t = {
     news: 'Medisina täzelikleri',
     firstaid: 'Ilkinji kömek',
     search: 'Gözlemek...',
-    back: '← Yza gaytmak',
+    
     addToCart: 'Sebede goş',
     cart: 'Sebet',
     cartEmpty: 'Sebet boş',
@@ -26,7 +26,7 @@ export const t = {
     news: 'Новости медицины',
     firstaid: 'Первая помощь',
     search: 'Поиск...',
-    back: '← Назад',
+    
     addToCart: 'В корзину',
     cart: 'Корзина',
     cartEmpty: 'Корзина пуста',

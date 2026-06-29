@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -27,10 +26,9 @@ export default function Compare() {
 
   return (
     <ScrollView style={styles.container}>
-    <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-  <Ionicons name="chevron-back" size={20} color="#374151" />
-  <Text style={styles.backText}>{tr.back}</Text>
-</TouchableOpacity>
+      <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+        <Text style={styles.backText}>{tr.back}</Text>
+      </TouchableOpacity>
 
       <Text style={styles.title}> {tr.compare}</Text>
 
@@ -86,7 +84,7 @@ export default function Compare() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'white' },
-  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, margin: 16, marginTop: 60, backgroundColor: '#e5e7eb', borderRadius: 16, padding: 12, alignSelf: 'flex-start' },
+  backBtn: { margin: 16, marginTop: 60, backgroundColor: '#e5e7eb', borderRadius: 16, padding: 12, alignSelf: 'flex-start' },
   backText: { color: '#374151', fontWeight: '600' },
   title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 8, paddingHorizontal: 16 },
   subtitle: { color: '#6b7280', textAlign: 'center', marginBottom: 24, paddingHorizontal: 16 },
