@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -22,6 +23,7 @@ export default function News() {
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+       <Ionicons name="chevron-back" size={20} color="#374151" />
         <Text style={styles.backText}>{tr.back}</Text>
       </TouchableOpacity>
 
@@ -34,7 +36,7 @@ export default function News() {
         <View style={styles.list}>
           {news.map((item) => (
             <View key={item.id} style={styles.card}>
-              <Text style={styles.cardEmoji}>{item.emoji}</Text>
+              <Text style={styles.cardEmoji}><Ionicons name="newspaper-outline" size={36} color="#0d9488" /></Text>
               <View style={styles.cardContent}>
                 <Text style={styles.cardTitle}>{lang === 'RU' && item.title_ru ? item.title_ru : item.title}</Text>
                 <Text style={styles.cardText}>{lang === 'RU' && item.content_ru ? item.content_ru : item.content}</Text>
@@ -52,7 +54,7 @@ export default function News() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'white' },
-  backBtn: { margin: 16, marginTop: 60, backgroundColor: '#e5e7eb', borderRadius: 16, padding: 12, alignSelf: 'flex-start' },
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, margin: 16, marginTop: 60, backgroundColor: '#e5e7eb', borderRadius: 16, padding: 12, alignSelf: 'flex-start' },
   backText: { color: '#374151', fontWeight: '600' },
   title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 8, paddingHorizontal: 16 },
   subtitle: { color: '#6b7280', textAlign: 'center', marginBottom: 24, paddingHorizontal: 16 },

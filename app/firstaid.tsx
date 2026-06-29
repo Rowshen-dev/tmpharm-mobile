@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useCart } from './_cartContext';
@@ -18,6 +19,7 @@ export default function FirstAid() {
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+        <Ionicons name="chevron-back" size={20} color="#374151" />
         <Text style={styles.backText}>{tr.back}</Text>
       </TouchableOpacity>
 
@@ -25,13 +27,13 @@ export default function FirstAid() {
       <Text style={styles.subtitle}>{tr.firstaidSubtitle}</Text>
 
       <View style={styles.emergency}>
-        <Text style={styles.emergencyText}>{tr.emergency}</Text>
+        <Text style={styles.emergencyText}><Ionicons name="call-outline" size={24} color="#dc2626" style={{ marginBottom: 4 }} />{tr.emergency}</Text>
       </View>
 
       <View style={styles.list}>
         {tips.map((tip, i) => (
           <View key={i} style={styles.card}>
-           
+           <Ionicons name="medkit-outline" size={40} color="#0d9488" style={{ textAlign: 'center', marginBottom: 8, alignSelf: 'center' }} />
             <Text style={styles.cardTitle}>{tip.title}</Text>
             {tip.steps.map((step, j) => (
               <View key={j} style={styles.stepRow}>
@@ -50,7 +52,7 @@ export default function FirstAid() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'white' },
-  backBtn: { margin: 16, marginTop: 60, backgroundColor: '#e5e7eb', borderRadius: 16, padding: 12, alignSelf: 'flex-start' },
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, margin: 16, marginTop: 60, backgroundColor: '#e5e7eb', borderRadius: 16, padding: 12, alignSelf: 'flex-start' },
   backText: { color: '#374151', fontWeight: '600' },
   title: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', marginBottom: 8 },
   subtitle: { color: '#6b7280', textAlign: 'center', marginBottom: 16 },

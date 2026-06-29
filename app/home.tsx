@@ -186,7 +186,7 @@ const handleSearch = () => {
 
       {/* Cart button */}
       <TouchableOpacity style={styles.cartBtn} onPress={() => setCartOpen(true)}>
-        <Text style={styles.cartIcon}>🛒</Text>
+        <Ionicons name="cart-outline" size={28} color="white" />
         {totalItems > 0 && (
           <View style={styles.cartBadge}>
             <Text style={styles.cartBadgeText}>{totalItems}</Text>

@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Alert, Image, Modal, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -62,6 +63,7 @@ const submitOrder = async () => {
     <View style={{ flex: 1, backgroundColor: 'white' }}>
     <ScrollView style={styles.container}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+         <Ionicons name="chevron-back" size={20} color="#374151" />
         <Text style={styles.backText}>{tr.back}</Text>
       </TouchableOpacity>
 
@@ -106,7 +108,7 @@ const submitOrder = async () => {
     </ScrollView>
                {/* Cart button */}
                 <TouchableOpacity style={styles.cartBtn} onPress={() => setCartOpen(true)}>
-                  <Text style={styles.cartIcon}>🛒</Text>
+                  <Ionicons name="cart-outline" size={28} color="white" />
                   {totalItems > 0 && (
                     <View style={styles.cartBadge}>
                       <Text style={styles.cartBadgeText}>{totalItems}</Text>
@@ -283,7 +285,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'white' },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   loading: { fontSize: 18, color: '#6b7280' },
-  backBtn: { margin: 16, marginTop: 60, backgroundColor: '#e5e7eb', borderRadius: 16, padding: 12, alignSelf: 'flex-start' },
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, margin: 16, marginTop: 60, backgroundColor: '#e5e7eb', borderRadius: 16, padding: 12, alignSelf: 'flex-start' },
   backText: { color: '#374151', fontWeight: '600' },
   profile: { backgroundColor: 'white', margin: 16, borderRadius: 24, padding: 24, alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 },
   profileEmoji: { fontSize: 60, marginBottom: 12 },
