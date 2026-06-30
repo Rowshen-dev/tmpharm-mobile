@@ -18,6 +18,14 @@ const [customerPhone, setCustomerPhone] = useState('');
 const [customerName, setCustomerName] = useState('');
 const [isOrdering, setIsOrdering] = useState(false);
 const [medInfoModal, setMedInfoModal] = useState<any | null>(null);
+const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+const categories = [
+  { name: 'Baş agyry', keyword: 'headache' },
+  { name: 'Garyn agyry', keyword: 'stomach' },
+  { name: 'Sowuklama', keyword: 'cold' },
+  { name: 'Allergiya', keyword: 'allergy' },
+  { name: 'Antibiotikler', keyword: 'antibiotic' },
+];
 
 const handleOrder = (med: any) => {
   setSelectedMed(med);
@@ -59,6 +67,8 @@ const submitOrder = async () => {
     </View>
   );
 
+  const filteredMedicines = selectedCategory ? medicines.filter(m => m.category === selectedCategory) : medicines;
+
   return (
     <View style={{ flex: 1, backgroundColor: 'white' }}>
     <ScrollView style={styles.container}>
@@ -76,10 +86,32 @@ const submitOrder = async () => {
         <Text style={styles.profilePhone}>{pharmacy?.phone}</Text>
       </View>
 
-      {/* Medicines */}
+{/* Medicines */}
       <Text style={styles.sectionTitle}>{tr.medicines}</Text>
+
+      {/* Categories */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catRow}>
+        <TouchableOpacity
+          style={[styles.catBtn, !selectedCategory && styles.catBtnActive]}
+          onPress={() => setSelectedCategory(null)}
+        >
+          <Text style={[styles.catText, !selectedCategory && styles.catTextActive]}>Hemmesi</Text>
+        </TouchableOpacity>
+        {categories.map((cat) => (
+          <TouchableOpacity
+            key={cat.keyword}
+            style={[styles.catBtn, selectedCategory === cat.keyword && styles.catBtnActive]}
+            onPress={() => setSelectedCategory(cat.keyword)}
+          >
+            <Text style={[styles.catText, selectedCategory === cat.keyword && styles.catTextActive]}>
+              {cat.name}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
      <View style={styles.grid}>
-        {medicines.map((med) => (
+        {filteredMedicines.map((med) => (
           <TouchableOpacity key={med.id} style={styles.medCard} onPress={() => setMedInfoModal(med)} activeOpacity={0.85}>
             {med.image_url ? (
               <Image source={{ uri: med.image_url }} style={{ width: 60, height: 60, marginBottom: 8 }} resizeMode="contain" />
@@ -326,4 +358,9 @@ const styles = StyleSheet.create({
   orderBtnText: { color: 'white', fontWeight: 'bold', fontSize: 18 },
   bronBtn: { backgroundColor: 'white', borderWidth: 2, borderColor: '#0d9488', borderRadius: 12, paddingVertical: 8, width: '100%', alignItems: 'center', marginTop: 8 },
 bronBtnText: { color: '#0d9488', fontWeight: '600', fontSize: 13 },
+catRow: { paddingHorizontal: 16, marginBottom: 16 },
+catBtn: { paddingHorizontal: 16, paddingVertical: 10, borderRadius: 20, borderWidth: 1, borderColor: '#99f6e4', backgroundColor: 'white', marginRight: 8, height: 44, justifyContent: 'center' },
+catBtnActive: { backgroundColor: '#0d9488', borderColor: '#0d9488' },
+catText: { color: '#0d9488', fontWeight: '500' },
+catTextActive: { color: 'white' },
 });
